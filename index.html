@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#07111f">
+  <title>World Cup 2026 Score Kiosk</title>
+  <script>
+    try {
+      const savedTheme = localStorage.getItem('fifaKioskTheme.v1');
+      document.documentElement.dataset.theme = savedTheme || (
+        matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
+      );
+    } catch {
+      document.documentElement.dataset.theme = 'dark';
+    }
+  </script>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <header class="kiosk-header">
+    <div class="title-block">
+      <span class="trophy" aria-hidden="true">🏆</span>
+      <div>
+        <p class="eyebrow">FIFA World Cup 2026</p>
+        <h1>Score Kiosk</h1>
+      </div>
+    </div>
+
+    <div class="controls" aria-label="Kiosk controls">
+      <label class="refresh-control" for="refreshSeconds">
+        Refresh every
+        <span class="input-wrap">
+          <input id="refreshSeconds" type="number" min="1" max="3600" step="1" value="5" inputmode="numeric">
+          <span>sec</span>
+        </span>
+      </label>
+      <button class="icon-button" id="refreshNow" type="button" title="Refresh scores now">
+        <span aria-hidden="true">↻</span>
+        <span class="button-label">Refresh</span>
+      </button>
+      <button class="icon-button" id="themeToggle" type="button" aria-pressed="false">
+        <span id="themeIcon" aria-hidden="true">☀️</span>
+        <span class="button-label" id="themeLabel">Light</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section class="status-bar" aria-live="polite">
+      <div>
+        <span class="status-dot" id="statusDot" aria-hidden="true"></span>
+        <strong id="loadStatus">Loading match data…</strong>
+      </div>
+      <span id="lastUpdated"></span>
+    </section>
+
+    <section class="score-grid" id="scoreGrid" aria-label="World Cup match scores"></section>
+  </main>
+
+  <template id="matchTemplate">
+    <article class="match-card">
+      <div class="card-topline">
+        <span class="stage"></span>
+        <span class="match-status"></span>
+      </div>
+      <div class="scoreboard">
+        <div class="team team-home">
+          <span class="flag" aria-hidden="true"></span>
+          <span class="team-name"></span>
+        </div>
+        <div class="score">
+          <span class="home-score"></span>
+          <span class="divider">–</span>
+          <span class="away-score"></span>
+        </div>
+        <div class="team team-away">
+          <span class="flag" aria-hidden="true"></span>
+          <span class="team-name"></span>
+        </div>
+      </div>
+      <div class="match-details">
+        <span class="detail date-detail"></span>
+        <span class="detail time-detail"></span>
+        <span class="detail venue-detail"></span>
+      </div>
+    </article>
+  </template>
+
+  <noscript>This score kiosk requires JavaScript to load the match data.</noscript>
+  <script src="./app.js"></script>
+</body>
+</html>
