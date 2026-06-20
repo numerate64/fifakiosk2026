@@ -64,7 +64,7 @@ const elements = {
   matchFilter: document.getElementById('matchFilter'),
   refreshSeconds: document.getElementById('refreshSeconds'),
   showNonCompleted: document.getElementById('showNonCompleted'),
-  displayOrder: document.getElementById('displayOrder'),
+  randomOrder: document.getElementById('randomOrder'),
   refreshNow: document.getElementById('refreshNow'),
   themeToggle: document.getElementById('themeToggle'),
   themeIcon: document.getElementById('themeIcon'),
@@ -253,7 +253,7 @@ function applyMatchFilter(preferredMatchId) {
 
 function nextMatchIndex() {
   if (matches.length < 2) return 0;
-  if (elements.displayOrder.value === 'sequential') {
+  if (!elements.randomOrder.checked) {
     return (currentMatchIndex + 1) % matches.length;
   }
 
@@ -337,9 +337,7 @@ function initialize() {
   elements.refreshSeconds.value = savedRefresh;
   elements.showNonCompleted.checked = localStorage.getItem(SHOW_NON_COMPLETED_KEY) === 'true';
   elements.matchFilter.value = localStorage.getItem(MATCH_FILTER_KEY) || '';
-  elements.displayOrder.value = localStorage.getItem(DISPLAY_ORDER_KEY) === 'sequential'
-    ? 'sequential'
-    : 'random';
+  elements.randomOrder.checked = localStorage.getItem(DISPLAY_ORDER_KEY) === 'random';
   applyTheme(document.documentElement.dataset.theme, false);
 
   elements.refreshSeconds.addEventListener('change', scheduleRefresh);
@@ -360,8 +358,11 @@ function initialize() {
     localStorage.setItem(SHOW_NON_COMPLETED_KEY, String(elements.showNonCompleted.checked));
     applyMatchFilter(currentMatchId);
   });
-  elements.displayOrder.addEventListener('change', () => {
-    localStorage.setItem(DISPLAY_ORDER_KEY, elements.displayOrder.value);
+  elements.randomOrder.addEventListener('change', () => {
+    localStorage.setItem(
+      DISPLAY_ORDER_KEY,
+      elements.randomOrder.checked ? 'random' : 'sequential'
+    );
   });
   elements.themeToggle.addEventListener('click', () => {
     applyTheme(document.documentElement.dataset.theme === 'light' ? 'dark' : 'light');
