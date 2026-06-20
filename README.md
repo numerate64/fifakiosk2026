@@ -4,9 +4,10 @@ A large-format, responsive World Cup scoreboard designed for kiosk and wall-disp
 
 ## Features
 
-- Displays all 104 matches with large team flag emojis
+- Centers one match at a time with large team flag emojis
+- Cycles through all 104 matches at the selected interval
 - Shows scores, match status, date, Eastern time, venue, and location
-- Automatically reloads the public World Cup JSON feed
+- Reloads the public World Cup JSON feed as each new match appears
 - User-selectable refresh interval, defaulting to 5 seconds
 - Light and dark themes saved in the browser
 - Responsive layout for televisions, desktops, tablets, and phones
