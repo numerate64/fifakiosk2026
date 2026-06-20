@@ -14,6 +14,11 @@ A large-format, responsive World Cup scoreboard designed for kiosk and wall-disp
 - Light and dark themes saved in the browser
 - Responsive layout for televisions, desktops, tablets, and phones
 
+## Flag artwork
+
+Flag graphics are from [Twemoji](https://github.com/twitter/twemoji) and are
+licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+
 ## Data source
 
 The kiosk reads:
