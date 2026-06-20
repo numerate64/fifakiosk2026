@@ -44,7 +44,6 @@ const FLAGS = {
   Portugal: '🇵🇹',
   Qatar: '🇶🇦',
   'Saudi Arabia': '🇸🇦',
-  Scotland: '🏴',
   Senegal: '🇸🇳',
   'South Africa': '🇿🇦',
   'South Korea': '🇰🇷',
@@ -56,6 +55,10 @@ const FLAGS = {
   USA: '🇺🇸',
   Uruguay: '🇺🇾',
   Uzbekistan: '🇺🇿'
+};
+
+const FLAG_IMAGES = {
+  Scotland: './flags/scotland.svg'
 };
 
 const elements = {
@@ -127,6 +130,19 @@ function displayDate(match) {
   }).format(kickoff);
 }
 
+function setFlag(element, team) {
+  const imageUrl = FLAG_IMAGES[team];
+  if (!imageUrl) {
+    element.textContent = FLAGS[team] || '⚽';
+    return;
+  }
+
+  const image = document.createElement('img');
+  image.src = imageUrl;
+  image.alt = '';
+  element.replaceChildren(image);
+}
+
 function createMatchCard(match) {
   const card = elements.template.content.firstElementChild.cloneNode(true);
   const [home = 'TBD', away = 'TBD'] = splitTeams(match.matchup);
@@ -138,8 +154,8 @@ function createMatchCard(match) {
   card.classList.add(cardClass(status));
   card.querySelector('.stage').textContent = [match.stage, match.group].filter(Boolean).join(' · ');
   card.querySelector('.match-status').textContent = status;
-  card.querySelector('.team-home .flag').textContent = FLAGS[home] || '⚽';
-  card.querySelector('.team-away .flag').textContent = FLAGS[away] || '⚽';
+  setFlag(card.querySelector('.team-home .flag'), home);
+  setFlag(card.querySelector('.team-away .flag'), away);
   card.querySelector('.team-home .team-name').textContent = home;
   card.querySelector('.team-away .team-name').textContent = away;
 
