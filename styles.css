@@ -95,9 +95,23 @@ select {
 
 h1 {
   margin: 0;
-  font-size: clamp(1.7rem, 4vw, 3.2rem);
-  line-height: 0.95;
+  font-size: clamp(1.35rem, 3vw, 2.35rem);
+  line-height: 1;
   letter-spacing: -0.04em;
+}
+
+.github-link {
+  display: inline-block;
+  margin-top: 0.35rem;
+  color: var(--accent-strong);
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.github-link:hover,
+.github-link:focus-visible {
+  text-decoration: underline;
 }
 
 .controls {
