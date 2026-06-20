@@ -70,6 +70,8 @@ const elements = {
 
 let refreshTimer;
 let requestInProgress = false;
+let matches = [];
+let currentMatchIndex = 0;
 
 function splitTeams(matchup = 'TBD vs TBD') {
   return matchup
@@ -148,16 +150,21 @@ function createMatchCard(match) {
   return card;
 }
 
-function renderMatches(matches) {
-  const fragment = document.createDocumentFragment();
-  const orderedMatches = [...matches].sort((a, b) => {
+function sortMatches(nextMatches) {
+  return [...nextMatches].sort((a, b) => {
     const aTime = Date.parse(a.kickoffEt) || Number.MAX_SAFE_INTEGER;
     const bTime = Date.parse(b.kickoffEt) || Number.MAX_SAFE_INTEGER;
     return aTime - bTime || String(a.id).localeCompare(String(b.id));
   });
+}
 
-  orderedMatches.forEach(match => fragment.append(createMatchCard(match)));
-  elements.grid.replaceChildren(fragment);
+function renderCurrentMatch() {
+  if (!matches.length) return;
+  currentMatchIndex = ((currentMatchIndex % matches.length) + matches.length) % matches.length;
+  elements.grid.replaceChildren(createMatchCard(matches[currentMatchIndex]));
+
+  const completed = matches.filter(match => scoreFor(match, 'home') !== null).length;
+  setStatus(`Match ${currentMatchIndex + 1} of ${matches.length} · ${completed} scores posted`);
 }
 
 function setStatus(message, isError = false) {
@@ -165,10 +172,17 @@ function setStatus(message, isError = false) {
   elements.statusDot.classList.toggle('error', isError);
 }
 
-async function loadMatches() {
+async function loadMatches({ advance = false } = {}) {
   if (requestInProgress) return;
   requestInProgress = true;
-  setStatus('Refreshing scores…');
+
+  if (advance && matches.length) {
+    currentMatchIndex = (currentMatchIndex + 1) % matches.length;
+    renderCurrentMatch();
+  }
+
+  const currentMatchId = matches[currentMatchIndex]?.id;
+  setStatus(advance ? 'Loading next match…' : 'Refreshing current match…');
 
   try {
     const url = new URL(DATA_URL);
@@ -179,9 +193,12 @@ async function loadMatches() {
     const data = await response.json();
     if (!Array.isArray(data.matches)) throw new Error('The match feed has an unexpected format');
 
-    renderMatches(data.matches);
-    const completed = data.matches.filter(match => scoreFor(match, 'home') !== null).length;
-    setStatus(`${data.matches.length} matches · ${completed} scores posted`);
+    matches = sortMatches(data.matches);
+    if (currentMatchId) {
+      const refreshedIndex = matches.findIndex(match => match.id === currentMatchId);
+      if (refreshedIndex >= 0 && !advance) currentMatchIndex = refreshedIndex;
+    }
+    renderCurrentMatch();
 
     const sourceTime = data.updatedAt ? new Date(data.updatedAt) : new Date();
     elements.lastUpdated.textContent = `Feed updated ${sourceTime.toLocaleString([], {
@@ -190,7 +207,9 @@ async function loadMatches() {
     })}`;
   } catch (error) {
     setStatus(error.message || 'Unable to load match data', true);
-    if (!elements.grid.children.length) {
+    if (matches.length) {
+      renderCurrentMatch();
+    } else if (!elements.grid.children.length) {
       elements.grid.innerHTML = '<p class="empty-state">⚠️ Match data is temporarily unavailable. The kiosk will keep trying.</p>';
     }
   } finally {
@@ -209,7 +228,7 @@ function scheduleRefresh() {
   const seconds = normalizeRefreshSeconds(elements.refreshSeconds.value);
   elements.refreshSeconds.value = seconds;
   localStorage.setItem(REFRESH_KEY, String(seconds));
-  refreshTimer = setInterval(loadMatches, seconds * 1000);
+  refreshTimer = setInterval(() => loadMatches({ advance: true }), seconds * 1000);
 }
 
 function applyTheme(theme, save = true) {
@@ -235,7 +254,7 @@ function initialize() {
       scheduleRefresh();
     }
   });
-  elements.refreshNow.addEventListener('click', loadMatches);
+  elements.refreshNow.addEventListener('click', () => loadMatches());
   elements.themeToggle.addEventListener('click', () => {
     applyTheme(document.documentElement.dataset.theme === 'light' ? 'dark' : 'light');
   });

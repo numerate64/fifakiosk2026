@@ -164,6 +164,9 @@ input:focus-visible {
 }
 
 main {
+  display: flex;
+  min-height: calc(100vh - 8rem);
+  flex-direction: column;
   padding: 1rem clamp(1rem, 3vw, 3rem) 3rem;
 }
 
@@ -203,16 +206,17 @@ main {
 
 .score-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 31rem), 1fr));
-  gap: clamp(0.85rem, 1.5vw, 1.3rem);
-  max-width: 1600px;
-  margin: 0 auto;
+  width: min(100%, 70rem);
+  flex: 1;
+  place-items: center;
+  margin: auto;
 }
 
 .match-card {
+  width: 100%;
   overflow: hidden;
   border: 1px solid var(--panel-border);
-  border-radius: 1.25rem;
+  border-radius: clamp(1.25rem, 2vw, 2rem);
   background: var(--panel);
   box-shadow: var(--shadow);
 }
@@ -229,9 +233,9 @@ main {
   display: flex;
   justify-content: space-between;
   gap: 1rem;
-  padding: 0.9rem 1.15rem 0;
+  padding: clamp(1rem, 2vw, 1.5rem) clamp(1.15rem, 3vw, 2rem) 0;
   color: var(--muted);
-  font-size: 0.76rem;
+  font-size: clamp(0.76rem, 1.5vw, 1rem);
   font-weight: 850;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -250,8 +254,8 @@ main {
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
   gap: 0.6rem;
-  min-height: 13.5rem;
-  padding: 1rem clamp(0.8rem, 2vw, 1.5rem);
+  min-height: clamp(18rem, 52vh, 36rem);
+  padding: clamp(1.5rem, 4vw, 3rem);
 }
 
 .team {
@@ -265,15 +269,15 @@ main {
 
 .flag {
   min-height: 1em;
-  font-size: clamp(3.4rem, 8vw, 6rem);
+  font-size: clamp(4.5rem, 12vw, 10rem);
   line-height: 1;
   filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.16));
 }
 
 .team-name {
-  max-width: 13rem;
+  max-width: 20rem;
   overflow-wrap: anywhere;
-  font-size: clamp(0.95rem, 2vw, 1.2rem);
+  font-size: clamp(1.15rem, 3vw, 2rem);
   font-weight: 850;
   line-height: 1.12;
 }
@@ -283,8 +287,8 @@ main {
   align-items: baseline;
   justify-content: center;
   gap: clamp(0.22rem, 1vw, 0.75rem);
-  min-width: 7rem;
-  font-size: clamp(3.4rem, 9vw, 6.5rem);
+  min-width: clamp(7rem, 18vw, 14rem);
+  font-size: clamp(4rem, 13vw, 10rem);
   font-weight: 950;
   line-height: 0.9;
   letter-spacing: -0.08em;
@@ -292,9 +296,9 @@ main {
 }
 
 .score.pending {
-  min-width: 4.5rem;
+  min-width: 6rem;
   color: var(--muted);
-  font-size: clamp(1.7rem, 4vw, 2.7rem);
+  font-size: clamp(2rem, 6vw, 4.5rem);
   letter-spacing: 0.02em;
 }
 
@@ -317,8 +321,8 @@ main {
   align-items: center;
   justify-content: center;
   min-width: 0;
-  padding: 0.85rem 0.65rem;
-  font-size: 0.82rem;
+  padding: clamp(0.9rem, 2vw, 1.35rem) 0.75rem;
+  font-size: clamp(0.82rem, 1.6vw, 1.1rem);
   font-weight: 700;
   text-align: center;
 }
@@ -370,7 +374,7 @@ noscript {
   }
 
   .scoreboard {
-    min-height: 11rem;
+    min-height: 21rem;
   }
 
   .match-details {
