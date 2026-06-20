@@ -441,19 +441,10 @@ main {
 }
 
 .flag {
-  display: grid;
-  width: 1.5em;
   min-height: 1em;
-  place-items: center;
   font-size: clamp(4.5rem, 12vw, 10rem);
   line-height: 1;
   filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.16));
-}
-
-.flag img {
-  display: block;
-  width: 100%;
-  height: auto;
 }
 
 .team-name {

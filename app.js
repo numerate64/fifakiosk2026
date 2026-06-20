@@ -6,56 +6,56 @@ const DISPLAY_ORDER_KEY = 'fifaKioskDisplayOrder.v1';
 const MATCH_FILTER_KEY = 'fifaKioskMatchFilter.v1';
 const DEFAULT_REFRESH_SECONDS = 3;
 
-const FLAG_IMAGES = {
-  Algeria: './flags/twemoji/1f1e9-1f1ff.svg',
-  Argentina: './flags/twemoji/1f1e6-1f1f7.svg',
-  Australia: './flags/twemoji/1f1e6-1f1fa.svg',
-  Austria: './flags/twemoji/1f1e6-1f1f9.svg',
-  Belgium: './flags/twemoji/1f1e7-1f1ea.svg',
-  'Bosnia & Herzegovina': './flags/twemoji/1f1e7-1f1e6.svg',
-  Brazil: './flags/twemoji/1f1e7-1f1f7.svg',
-  'Cabo Verde': './flags/twemoji/1f1e8-1f1fb.svg',
-  'Cape Verde': './flags/twemoji/1f1e8-1f1fb.svg',
-  Canada: './flags/twemoji/1f1e8-1f1e6.svg',
-  Colombia: './flags/twemoji/1f1e8-1f1f4.svg',
-  Croatia: './flags/twemoji/1f1ed-1f1f7.svg',
-  Curaçao: './flags/twemoji/1f1e8-1f1fc.svg',
-  'Czech Republic': './flags/twemoji/1f1e8-1f1ff.svg',
-  'DR Congo': './flags/twemoji/1f1e8-1f1e9.svg',
-  Ecuador: './flags/twemoji/1f1ea-1f1e8.svg',
-  Egypt: './flags/twemoji/1f1ea-1f1ec.svg',
-  England: './flags/twemoji/1f3f4-e0067-e0062-e0065-e006e-e0067-e007f.svg',
-  France: './flags/twemoji/1f1eb-1f1f7.svg',
-  Germany: './flags/twemoji/1f1e9-1f1ea.svg',
-  Ghana: './flags/twemoji/1f1ec-1f1ed.svg',
-  Haiti: './flags/twemoji/1f1ed-1f1f9.svg',
-  Iran: './flags/twemoji/1f1ee-1f1f7.svg',
-  Iraq: './flags/twemoji/1f1ee-1f1f6.svg',
-  'Ivory Coast': './flags/twemoji/1f1e8-1f1ee.svg',
-  Japan: './flags/twemoji/1f1ef-1f1f5.svg',
-  Jordan: './flags/twemoji/1f1ef-1f1f4.svg',
-  Mexico: './flags/twemoji/1f1f2-1f1fd.svg',
-  Morocco: './flags/twemoji/1f1f2-1f1e6.svg',
-  Netherlands: './flags/twemoji/1f1f3-1f1f1.svg',
-  'New Zealand': './flags/twemoji/1f1f3-1f1ff.svg',
-  Norway: './flags/twemoji/1f1f3-1f1f4.svg',
-  Panama: './flags/twemoji/1f1f5-1f1e6.svg',
-  Paraguay: './flags/twemoji/1f1f5-1f1fe.svg',
-  Portugal: './flags/twemoji/1f1f5-1f1f9.svg',
-  Qatar: './flags/twemoji/1f1f6-1f1e6.svg',
-  'Saudi Arabia': './flags/twemoji/1f1f8-1f1e6.svg',
-  Scotland: './flags/twemoji/1f3f4-e0067-e0062-e0073-e0063-e0074-e007f.svg',
-  Senegal: './flags/twemoji/1f1f8-1f1f3.svg',
-  'South Africa': './flags/twemoji/1f1ff-1f1e6.svg',
-  'South Korea': './flags/twemoji/1f1f0-1f1f7.svg',
-  Spain: './flags/twemoji/1f1ea-1f1f8.svg',
-  Sweden: './flags/twemoji/1f1f8-1f1ea.svg',
-  Switzerland: './flags/twemoji/1f1e8-1f1ed.svg',
-  Tunisia: './flags/twemoji/1f1f9-1f1f3.svg',
-  Turkey: './flags/twemoji/1f1f9-1f1f7.svg',
-  USA: './flags/twemoji/1f1fa-1f1f8.svg',
-  Uruguay: './flags/twemoji/1f1fa-1f1fe.svg',
-  Uzbekistan: './flags/twemoji/1f1fa-1f1ff.svg'
+const FLAGS = {
+  Algeria: '🇩🇿',
+  Argentina: '🇦🇷',
+  Australia: '🇦🇺',
+  Austria: '🇦🇹',
+  Belgium: '🇧🇪',
+  'Bosnia & Herzegovina': '🇧🇦',
+  Brazil: '🇧🇷',
+  'Cabo Verde': '🇨🇻',
+  'Cape Verde': '🇨🇻',
+  Canada: '🇨🇦',
+  Colombia: '🇨🇴',
+  Croatia: '🇭🇷',
+  Curaçao: '🇨🇼',
+  'Czech Republic': '🇨🇿',
+  'DR Congo': '🇨🇩',
+  Ecuador: '🇪🇨',
+  Egypt: '🇪🇬',
+  England: '🏳️',
+  France: '🇫🇷',
+  Germany: '🇩🇪',
+  Ghana: '🇬🇭',
+  Haiti: '🇭🇹',
+  Iran: '🇮🇷',
+  Iraq: '🇮🇶',
+  'Ivory Coast': '🇨🇮',
+  Japan: '🇯🇵',
+  Jordan: '🇯🇴',
+  Mexico: '🇲🇽',
+  Morocco: '🇲🇦',
+  Netherlands: '🇳🇱',
+  'New Zealand': '🇳🇿',
+  Norway: '🇳🇴',
+  Panama: '🇵🇦',
+  Paraguay: '🇵🇾',
+  Portugal: '🇵🇹',
+  Qatar: '🇶🇦',
+  'Saudi Arabia': '🇸🇦',
+  Scotland: '🏳️',
+  Senegal: '🇸🇳',
+  'South Africa': '🇿🇦',
+  'South Korea': '🇰🇷',
+  Spain: '🇪🇸',
+  Sweden: '🇸🇪',
+  Switzerland: '🇨🇭',
+  Tunisia: '🇹🇳',
+  Turkey: '🇹🇷',
+  USA: '🇺🇸',
+  Uruguay: '🇺🇾',
+  Uzbekistan: '🇺🇿'
 };
 
 const elements = {
@@ -128,16 +128,7 @@ function displayDate(match) {
 }
 
 function setFlag(element, team) {
-  const imageUrl = FLAG_IMAGES[team];
-  if (!imageUrl) {
-    element.textContent = '⚽';
-    return;
-  }
-
-  const image = document.createElement('img');
-  image.src = imageUrl;
-  image.alt = '';
-  element.replaceChildren(image);
+  element.textContent = FLAGS[team] || '🏳️';
 }
 
 function createMatchCard(match) {
