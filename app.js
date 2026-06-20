@@ -1,6 +1,7 @@
 const DATA_URL = 'https://numerate64.github.io/worldcup2026/world-cup-2026.json';
 const REFRESH_KEY = 'fifaKioskRefreshSeconds.v1';
 const THEME_KEY = 'fifaKioskTheme.v1';
+const SHOW_NON_COMPLETED_KEY = 'fifaKioskShowNonCompleted.v1';
 const DEFAULT_REFRESH_SECONDS = 3;
 
 const FLAGS = {
@@ -59,6 +60,7 @@ const elements = {
   grid: document.getElementById('scoreGrid'),
   template: document.getElementById('matchTemplate'),
   refreshSeconds: document.getElementById('refreshSeconds'),
+  showNonCompleted: document.getElementById('showNonCompleted'),
   refreshNow: document.getElementById('refreshNow'),
   themeToggle: document.getElementById('themeToggle'),
   themeIcon: document.getElementById('themeIcon'),
@@ -70,6 +72,7 @@ const elements = {
 
 let refreshTimer;
 let requestInProgress = false;
+let allMatches = [];
 let matches = [];
 let currentMatchIndex = 0;
 
@@ -94,6 +97,11 @@ function matchStatus(match) {
   if (!Number.isFinite(kickoff) || Date.now() < kickoff) return 'Scheduled';
   if (Date.now() < kickoff + (2 * 60 * 60 * 1000)) return 'Live';
   return 'Score pending';
+}
+
+function isCompleted(match) {
+  return matchStatus(match).toLowerCase().includes('final')
+    || (scoreFor(match, 'home') !== null && scoreFor(match, 'away') !== null);
 }
 
 function cardClass(status) {
@@ -159,12 +167,29 @@ function sortMatches(nextMatches) {
 }
 
 function renderCurrentMatch() {
-  if (!matches.length) return;
+  if (!matches.length) {
+    elements.grid.innerHTML = '<p class="empty-state">No completed matches are available yet.</p>';
+    setStatus(`0 matches shown · ${allMatches.length} total`);
+    return;
+  }
+
   currentMatchIndex = ((currentMatchIndex % matches.length) + matches.length) % matches.length;
   elements.grid.replaceChildren(createMatchCard(matches[currentMatchIndex]));
 
-  const completed = matches.filter(match => scoreFor(match, 'home') !== null).length;
-  setStatus(`Match ${currentMatchIndex + 1} of ${matches.length} · ${completed} scores posted`);
+  const completed = allMatches.filter(isCompleted).length;
+  setStatus(`Match ${currentMatchIndex + 1} of ${matches.length} · ${completed} completed`);
+}
+
+function applyMatchFilter(preferredMatchId) {
+  matches = elements.showNonCompleted.checked
+    ? [...allMatches]
+    : allMatches.filter(isCompleted);
+
+  const preferredIndex = preferredMatchId
+    ? matches.findIndex(match => match.id === preferredMatchId)
+    : -1;
+  currentMatchIndex = preferredIndex >= 0 ? preferredIndex : 0;
+  renderCurrentMatch();
 }
 
 function setStatus(message, isError = false) {
@@ -193,12 +218,8 @@ async function loadMatches({ advance = false } = {}) {
     const data = await response.json();
     if (!Array.isArray(data.matches)) throw new Error('The match feed has an unexpected format');
 
-    matches = sortMatches(data.matches);
-    if (currentMatchId) {
-      const refreshedIndex = matches.findIndex(match => match.id === currentMatchId);
-      if (refreshedIndex >= 0 && !advance) currentMatchIndex = refreshedIndex;
-    }
-    renderCurrentMatch();
+    allMatches = sortMatches(data.matches);
+    applyMatchFilter(currentMatchId);
 
     const sourceTime = data.updatedAt ? new Date(data.updatedAt) : new Date();
     elements.lastUpdated.textContent = `Feed updated ${sourceTime.toLocaleString([], {
@@ -245,6 +266,7 @@ function applyTheme(theme, save = true) {
 function initialize() {
   const savedRefresh = normalizeRefreshSeconds(localStorage.getItem(REFRESH_KEY));
   elements.refreshSeconds.value = savedRefresh;
+  elements.showNonCompleted.checked = localStorage.getItem(SHOW_NON_COMPLETED_KEY) === 'true';
   applyTheme(document.documentElement.dataset.theme, false);
 
   elements.refreshSeconds.addEventListener('change', scheduleRefresh);
@@ -255,6 +277,11 @@ function initialize() {
     }
   });
   elements.refreshNow.addEventListener('click', () => loadMatches());
+  elements.showNonCompleted.addEventListener('change', () => {
+    const currentMatchId = matches[currentMatchIndex]?.id;
+    localStorage.setItem(SHOW_NON_COMPLETED_KEY, String(elements.showNonCompleted.checked));
+    applyMatchFilter(currentMatchId);
+  });
   elements.themeToggle.addEventListener('click', () => {
     applyTheme(document.documentElement.dataset.theme === 'light' ? 'dark' : 'light');
   });

@@ -106,6 +106,7 @@ h1 {
 }
 
 .refresh-control,
+.toggle-control,
 .icon-button {
   min-height: 3rem;
   border: 1px solid var(--panel-border);
@@ -121,6 +122,58 @@ h1 {
   color: var(--muted);
   font-size: 0.88rem;
   font-weight: 700;
+}
+
+.toggle-control {
+  gap: 0.55rem;
+  padding: 0.55rem 1rem;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
+.toggle-control input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+}
+
+.toggle-switch {
+  position: relative;
+  width: 2.25rem;
+  height: 1.25rem;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--muted) 35%, transparent);
+  transition: background 160ms ease;
+}
+
+.toggle-switch::after {
+  position: absolute;
+  top: 0.18rem;
+  left: 0.18rem;
+  width: 0.89rem;
+  height: 0.89rem;
+  border-radius: 50%;
+  background: var(--text);
+  content: "";
+  transition: transform 160ms ease;
+}
+
+.toggle-control input:checked + .toggle-switch {
+  background: var(--accent);
+}
+
+.toggle-control input:checked + .toggle-switch::after {
+  transform: translateX(1rem);
+}
+
+.toggle-control:has(input:focus-visible) {
+  outline: 3px solid color-mix(in srgb, var(--accent) 55%, transparent);
+  outline-offset: 2px;
 }
 
 .input-wrap {
@@ -399,6 +452,12 @@ noscript {
 
   .refresh-control {
     flex: 1;
+  }
+
+  .toggle-control {
+    order: 3;
+    width: 100%;
+    justify-content: center;
   }
 
   .scoreboard {
