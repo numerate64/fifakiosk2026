@@ -3,6 +3,7 @@ const REFRESH_KEY = 'fifaKioskRefreshSeconds.v1';
 const THEME_KEY = 'fifaKioskTheme.v1';
 const SHOW_NON_COMPLETED_KEY = 'fifaKioskShowNonCompleted.v1';
 const DISPLAY_ORDER_KEY = 'fifaKioskDisplayOrder.v1';
+const MATCH_FILTER_KEY = 'fifaKioskMatchFilter.v1';
 const DEFAULT_REFRESH_SECONDS = 3;
 
 const FLAGS = {
@@ -60,6 +61,7 @@ const FLAGS = {
 const elements = {
   grid: document.getElementById('scoreGrid'),
   template: document.getElementById('matchTemplate'),
+  matchFilter: document.getElementById('matchFilter'),
   refreshSeconds: document.getElementById('refreshSeconds'),
   showNonCompleted: document.getElementById('showNonCompleted'),
   displayOrder: document.getElementById('displayOrder'),
@@ -168,9 +170,63 @@ function sortMatches(nextMatches) {
   });
 }
 
+function normalizedText(value) {
+  return String(value || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[.,]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function matchesTextFilter(match, query) {
+  if (!query) return true;
+
+  const kickoff = new Date(match.kickoffEt);
+  const dateVariants = Number.isNaN(kickoff.getTime()) ? [] : [
+    kickoff.toLocaleDateString('en-US', {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric',
+      timeZone: 'America/New_York'
+    }),
+    kickoff.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      timeZone: 'America/New_York'
+    }),
+    kickoff.toLocaleDateString('en-US', {
+      month: 'numeric',
+      day: 'numeric',
+      year: 'numeric',
+      timeZone: 'America/New_York'
+    })
+  ];
+
+  const searchable = normalizedText([
+    match.matchup,
+    match.venue,
+    match.location,
+    match.date,
+    match.sourceDate,
+    ...dateVariants
+  ].filter(Boolean).join(' '));
+
+  return normalizedText(query)
+    .split(' ')
+    .every(term => searchable.includes(term));
+}
+
 function renderCurrentMatch() {
   if (!matches.length) {
-    elements.grid.innerHTML = '<p class="empty-state">No completed matches are available yet.</p>';
+    const hasQuery = elements.matchFilter.value.trim();
+    elements.grid.innerHTML = `<p class="empty-state">${
+      hasQuery
+        ? 'No matches found for that team, venue, or date.'
+        : 'No completed matches are available yet.'
+    }</p>`;
     setStatus(`0 matches shown · ${allMatches.length} total`);
     return;
   }
@@ -183,9 +239,10 @@ function renderCurrentMatch() {
 }
 
 function applyMatchFilter(preferredMatchId) {
-  matches = elements.showNonCompleted.checked
+  const statusFilteredMatches = elements.showNonCompleted.checked
     ? [...allMatches]
     : allMatches.filter(isCompleted);
+  matches = statusFilteredMatches.filter(match => matchesTextFilter(match, elements.matchFilter.value));
 
   const preferredIndex = preferredMatchId
     ? matches.findIndex(match => match.id === preferredMatchId)
@@ -279,6 +336,7 @@ function initialize() {
   const savedRefresh = normalizeRefreshSeconds(localStorage.getItem(REFRESH_KEY));
   elements.refreshSeconds.value = savedRefresh;
   elements.showNonCompleted.checked = localStorage.getItem(SHOW_NON_COMPLETED_KEY) === 'true';
+  elements.matchFilter.value = localStorage.getItem(MATCH_FILTER_KEY) || '';
   elements.displayOrder.value = localStorage.getItem(DISPLAY_ORDER_KEY) === 'sequential'
     ? 'sequential'
     : 'random';
@@ -292,6 +350,11 @@ function initialize() {
     }
   });
   elements.refreshNow.addEventListener('click', () => loadMatches());
+  elements.matchFilter.addEventListener('input', () => {
+    const currentMatchId = matches[currentMatchIndex]?.id;
+    localStorage.setItem(MATCH_FILTER_KEY, elements.matchFilter.value);
+    applyMatchFilter(currentMatchId);
+  });
   elements.showNonCompleted.addEventListener('change', () => {
     const currentMatchId = matches[currentMatchIndex]?.id;
     localStorage.setItem(SHOW_NON_COMPLETED_KEY, String(elements.showNonCompleted.checked));

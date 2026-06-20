@@ -107,6 +107,7 @@ h1 {
 }
 
 .refresh-control,
+.filter-control,
 .toggle-control,
 .order-control,
 .icon-button {
@@ -121,12 +122,17 @@ h1 {
 }
 
 .refresh-control,
+.filter-control,
 .order-control {
   display: grid;
   grid-template-columns: auto auto;
   align-items: center;
   gap: 0.2rem 0.85rem;
   padding: 0.58rem 0.65rem 0.58rem 0.9rem;
+}
+
+.filter-control {
+  min-width: min(20rem, 100%);
 }
 
 .control-label {
@@ -139,9 +145,45 @@ h1 {
 }
 
 .input-wrap,
+.search-wrap,
 .select-wrap {
   grid-row: 1 / 3;
   grid-column: 2;
+}
+
+.search-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 2.45rem;
+  padding: 0.35rem 0.7rem;
+  border: 1px solid color-mix(in srgb, var(--accent) 12%, var(--panel-border));
+  border-radius: 0.72rem;
+  color: var(--text);
+  background: color-mix(in srgb, var(--accent) 9%, var(--bg));
+}
+
+.search-icon {
+  color: var(--muted);
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.search-wrap input {
+  width: 12.5rem;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  color: inherit;
+  background: transparent;
+  font-size: 0.9rem;
+  font-weight: 750;
+}
+
+.search-wrap input::placeholder {
+  color: var(--muted);
+  opacity: 0.85;
 }
 
 .input-wrap {
@@ -303,6 +345,7 @@ h1 {
 }
 
 .refresh-control:hover,
+.filter-control:hover,
 .toggle-control:hover,
 .order-control:hover {
   border-color: color-mix(in srgb, var(--accent) 35%, var(--panel-border));
@@ -551,6 +594,15 @@ noscript {
 
   .refresh-control {
     flex: 1 1 14rem;
+  }
+
+  .filter-control {
+    flex: 1 1 100%;
+    order: -1;
+  }
+
+  .search-wrap input {
+    width: 100%;
   }
 
   .toggle-control {

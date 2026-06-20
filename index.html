@@ -16,7 +16,7 @@
       document.documentElement.dataset.theme = 'dark';
     }
   </script>
-  <link rel="stylesheet" href="./styles.css?v=20260620-5">
+  <link rel="stylesheet" href="./styles.css?v=20260620-6">
 </head>
 <body>
   <header class="kiosk-header">
@@ -29,6 +29,13 @@
     </div>
 
     <div class="controls" aria-label="Kiosk controls">
+      <label class="filter-control" for="matchFilter">
+        <span class="control-label">Find matches</span>
+        <span class="search-wrap">
+          <span class="search-icon" aria-hidden="true">⌕</span>
+          <input id="matchFilter" type="search" placeholder="Team, venue, or date" autocomplete="off">
+        </span>
+      </label>
       <label class="refresh-control" for="refreshSeconds">
         <span class="control-label">Refresh interval</span>
         <span class="input-wrap">
@@ -107,6 +114,6 @@
   </template>
 
   <noscript>This score kiosk requires JavaScript to load the match data.</noscript>
-  <script src="./app.js?v=20260620-5"></script>
+  <script src="./app.js?v=20260620-6"></script>
 </body>
 </html>
