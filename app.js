@@ -2,6 +2,7 @@ const DATA_URL = 'https://numerate64.github.io/worldcup2026/world-cup-2026.json'
 const REFRESH_KEY = 'fifaKioskRefreshSeconds.v1';
 const THEME_KEY = 'fifaKioskTheme.v1';
 const SHOW_NON_COMPLETED_KEY = 'fifaKioskShowNonCompleted.v1';
+const DISPLAY_ORDER_KEY = 'fifaKioskDisplayOrder.v1';
 const DEFAULT_REFRESH_SECONDS = 3;
 
 const FLAGS = {
@@ -61,6 +62,7 @@ const elements = {
   template: document.getElementById('matchTemplate'),
   refreshSeconds: document.getElementById('refreshSeconds'),
   showNonCompleted: document.getElementById('showNonCompleted'),
+  displayOrder: document.getElementById('displayOrder'),
   refreshNow: document.getElementById('refreshNow'),
   themeToggle: document.getElementById('themeToggle'),
   themeIcon: document.getElementById('themeIcon'),
@@ -192,6 +194,16 @@ function applyMatchFilter(preferredMatchId) {
   renderCurrentMatch();
 }
 
+function nextMatchIndex() {
+  if (matches.length < 2) return 0;
+  if (elements.displayOrder.value === 'sequential') {
+    return (currentMatchIndex + 1) % matches.length;
+  }
+
+  const offset = 1 + Math.floor(Math.random() * (matches.length - 1));
+  return (currentMatchIndex + offset) % matches.length;
+}
+
 function setStatus(message, isError = false) {
   elements.loadStatus.textContent = message;
   elements.statusDot.classList.toggle('error', isError);
@@ -202,7 +214,7 @@ async function loadMatches({ advance = false } = {}) {
   requestInProgress = true;
 
   if (advance && matches.length) {
-    currentMatchIndex = (currentMatchIndex + 1) % matches.length;
+    currentMatchIndex = nextMatchIndex();
     renderCurrentMatch();
   }
 
@@ -267,6 +279,9 @@ function initialize() {
   const savedRefresh = normalizeRefreshSeconds(localStorage.getItem(REFRESH_KEY));
   elements.refreshSeconds.value = savedRefresh;
   elements.showNonCompleted.checked = localStorage.getItem(SHOW_NON_COMPLETED_KEY) === 'true';
+  elements.displayOrder.value = localStorage.getItem(DISPLAY_ORDER_KEY) === 'sequential'
+    ? 'sequential'
+    : 'random';
   applyTheme(document.documentElement.dataset.theme, false);
 
   elements.refreshSeconds.addEventListener('change', scheduleRefresh);
@@ -281,6 +296,9 @@ function initialize() {
     const currentMatchId = matches[currentMatchIndex]?.id;
     localStorage.setItem(SHOW_NON_COMPLETED_KEY, String(elements.showNonCompleted.checked));
     applyMatchFilter(currentMatchId);
+  });
+  elements.displayOrder.addEventListener('change', () => {
+    localStorage.setItem(DISPLAY_ORDER_KEY, elements.displayOrder.value);
   });
   elements.themeToggle.addEventListener('click', () => {
     applyTheme(document.documentElement.dataset.theme === 'light' ? 'dark' : 'light');

@@ -16,7 +16,7 @@
       document.documentElement.dataset.theme = 'dark';
     }
   </script>
-  <link rel="stylesheet" href="./styles.css?v=20260620-3">
+  <link rel="stylesheet" href="./styles.css?v=20260620-4">
 </head>
 <body>
   <header class="kiosk-header">
@@ -40,6 +40,13 @@
         <input id="showNonCompleted" type="checkbox">
         <span class="toggle-switch" aria-hidden="true"></span>
         <span>Show non-completed</span>
+      </label>
+      <label class="order-control" for="displayOrder">
+        Order
+        <select id="displayOrder">
+          <option value="random">Random</option>
+          <option value="sequential">Sequential</option>
+        </select>
       </label>
       <button class="icon-button" id="refreshNow" type="button" title="Refresh scores now">
         <span aria-hidden="true">↻</span>
@@ -94,6 +101,6 @@
   </template>
 
   <noscript>This score kiosk requires JavaScript to load the match data.</noscript>
-  <script src="./app.js?v=20260620-3"></script>
+  <script src="./app.js?v=20260620-4"></script>
 </body>
 </html>

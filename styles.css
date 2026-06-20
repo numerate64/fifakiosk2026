@@ -107,6 +107,7 @@ h1 {
 
 .refresh-control,
 .toggle-control,
+.order-control,
 .icon-button {
   min-height: 3rem;
   border: 1px solid var(--panel-border);
@@ -122,6 +123,26 @@ h1 {
   color: var(--muted);
   font-size: 0.88rem;
   font-weight: 700;
+}
+
+.order-control {
+  gap: 0.55rem;
+  padding: 0.38rem 0.48rem 0.38rem 1rem;
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
+.order-control select {
+  min-height: 2.2rem;
+  padding: 0.35rem 2rem 0.35rem 0.75rem;
+  border: 0;
+  border-radius: 999px;
+  outline: 0;
+  color: var(--text);
+  background: color-mix(in srgb, var(--accent) 13%, var(--panel));
+  cursor: pointer;
+  font-weight: 900;
 }
 
 .toggle-control {
@@ -211,7 +232,8 @@ h1 {
 }
 
 .icon-button:focus-visible,
-input:focus-visible {
+input:focus-visible,
+select:focus-visible {
   outline: 3px solid color-mix(in srgb, var(--accent) 55%, transparent);
   outline-offset: 2px;
 }
@@ -458,6 +480,10 @@ noscript {
     order: 3;
     width: 100%;
     justify-content: center;
+  }
+
+  .order-control {
+    order: 4;
   }
 
   .scoreboard {
