@@ -8,7 +8,7 @@ A large-format, responsive World Cup scoreboard designed for kiosk and wall-disp
 - Cycles through all 104 matches at the selected interval
 - Shows scores, match status, date, Eastern time, venue, and location
 - Reloads the public World Cup JSON feed as each new match appears
-- User-selectable refresh interval, defaulting to 5 seconds
+- User-selectable refresh interval, defaulting to 3 seconds
 - Light and dark themes saved in the browser
 - Responsive layout for televisions, desktops, tablets, and phones
 

@@ -1,7 +1,7 @@
 const DATA_URL = 'https://numerate64.github.io/worldcup2026/world-cup-2026.json';
 const REFRESH_KEY = 'fifaKioskRefreshSeconds.v1';
 const THEME_KEY = 'fifaKioskTheme.v1';
-const DEFAULT_REFRESH_SECONDS = 5;
+const DEFAULT_REFRESH_SECONDS = 3;
 
 const FLAGS = {
   Algeria: '🇩🇿',
