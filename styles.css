@@ -323,6 +323,11 @@ h1 {
   transform: translateY(-1px);
 }
 
+.icon-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
 .refresh-control:hover,
 .filter-control:hover,
 .toggle-control:hover {

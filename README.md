@@ -12,6 +12,7 @@ A large-format, responsive World Cup scoreboard designed for kiosk and wall-disp
 - Reloads the public World Cup JSON feed as each new match appears
 - User-selectable refresh interval, defaulting to 3 seconds
 - Light and dark themes saved in the browser
+- Fullscreen toggle for kiosk and wall-display use
 - Responsive layout for televisions, desktops, tablets, and phones
 
 ## Data source

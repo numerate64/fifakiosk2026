@@ -69,6 +69,9 @@ const elements = {
   themeToggle: document.getElementById('themeToggle'),
   themeIcon: document.getElementById('themeIcon'),
   themeLabel: document.getElementById('themeLabel'),
+  fullscreenToggle: document.getElementById('fullscreenToggle'),
+  fullscreenIcon: document.getElementById('fullscreenIcon'),
+  fullscreenLabel: document.getElementById('fullscreenLabel'),
   loadStatus: document.getElementById('loadStatus'),
   lastUpdated: document.getElementById('lastUpdated'),
   statusDot: document.getElementById('statusDot')
@@ -336,6 +339,29 @@ function applyTheme(theme, save = true) {
   if (save) localStorage.setItem(THEME_KEY, nextTheme);
 }
 
+function updateFullscreenControl() {
+  const isFullscreen = Boolean(document.fullscreenElement);
+  elements.fullscreenToggle.setAttribute('aria-pressed', String(isFullscreen));
+  elements.fullscreenToggle.setAttribute(
+    'aria-label',
+    isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'
+  );
+  elements.fullscreenIcon.textContent = isFullscreen ? '✕' : '⛶';
+  elements.fullscreenLabel.textContent = isFullscreen ? 'Exit' : 'Fullscreen';
+}
+
+async function toggleFullscreen() {
+  try {
+    if (document.fullscreenElement) {
+      await document.exitFullscreen();
+    } else {
+      await document.documentElement.requestFullscreen();
+    }
+  } catch (error) {
+    setStatus(error.message || 'Fullscreen is unavailable in this browser', true);
+  }
+}
+
 function initialize() {
   const savedRefresh = normalizeRefreshSeconds(localStorage.getItem(REFRESH_KEY));
   elements.refreshSeconds.value = savedRefresh;
@@ -371,6 +397,14 @@ function initialize() {
   elements.themeToggle.addEventListener('click', () => {
     applyTheme(document.documentElement.dataset.theme === 'light' ? 'dark' : 'light');
   });
+  elements.fullscreenToggle.addEventListener('click', toggleFullscreen);
+  document.addEventListener('fullscreenchange', updateFullscreenControl);
+
+  if (!document.fullscreenEnabled) {
+    elements.fullscreenToggle.disabled = true;
+    elements.fullscreenToggle.title = 'Fullscreen is unavailable in this browser';
+  }
+  updateFullscreenControl();
 
   loadMatches();
   scheduleRefresh();
